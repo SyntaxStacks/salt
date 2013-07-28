@@ -29,7 +29,7 @@ def _check_svn():
     utils.check_or_die('svn')
 
 
-def _run_svn(cmd, cwd, user, username, opts, **kwargs):
+def _run_svn(cmd, cwd, user, username, password, opts, **kwargs):
     '''
     Execute svn
     return the output of the command
@@ -45,6 +45,9 @@ def _run_svn(cmd, cwd, user, username, opts, **kwargs):
 
     username
         Connect to the Subversion server as another user
+        
+    password
+        Password for user passed in username
 
     opts
         Any additional options to add to the command line
@@ -55,6 +58,8 @@ def _run_svn(cmd, cwd, user, username, opts, **kwargs):
     cmd = 'svn --non-interactive {0} '.format(cmd)
     if username:
         opts += ('--username', username)
+    if password:
+        opts += ('--password', password)
     if opts:
         cmd += subprocess.list2cmdline(opts)
 
@@ -113,7 +118,7 @@ def info(cwd, targets=None, user=None, username=None, fmt='str'):
         return [dict(tmp) for tmp in info_list]
 
 
-def checkout(cwd, remote, target=None, user=None, username=None, *opts):
+def checkout(cwd, remote, target=None, user=None, username=None, password = None, *opts):
     '''
     Download a working copy of the remote Subversion repository
     directory or file
@@ -133,6 +138,9 @@ def checkout(cwd, remote, target=None, user=None, username=None, *opts):
 
     username : None
         Connect to the Subversion server as another user
+        
+    username: None
+        Password for user passed in username
 
     CLI Example::
 
@@ -144,7 +152,7 @@ def checkout(cwd, remote, target=None, user=None, username=None, *opts):
     return _run_svn('checkout', cwd, user, username, opts)
 
 
-def update(cwd, targets=None, user=None, *opts):
+def update(cwd, targets=None, user=None, username = None, password = None, *opts):
     '''
     Update the current directory, files, or directories from
     the remote Subversion repository
@@ -161,6 +169,9 @@ def update(cwd, targets=None, user=None, *opts):
 
     username : None
         Connect to the Subversion server as another user
+        
+    password : None
+        Password for user passed in username
 
     CLI Example::
 
